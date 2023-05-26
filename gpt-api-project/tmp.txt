@@ -1,0 +1,7 @@
+ChatGPT Fine-Tuning(파인 튜닝) 하기
+
+예상 시나리오.
+1. Fine-Tuning
+2. 학습된 모델 테스트
+3. 뛰어난 성능 확인 완료
+
