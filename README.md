@@ -1,5 +1,7 @@
-# 2023-data-science-B
+# KAN-f: Korean Automatic Noise function
+2023-data-science-B-team-fig
 2023 Data Science Project
+팀원: 송은우, 이동혁, 조태현
 
 KoBART Translation 기반으로 모델 성능 평가를 진행함.
 [KoBART Translation](https://github.com/seujung/KoBART-translation)
