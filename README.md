@@ -10,3 +10,7 @@ KoBART Translation 기반으로 모델 성능 평가를 진행함.
 모델 학습 이후, NMT-blue-score를 이용해 모델간 성능을 계산함.
 
 AI Hub의 "일상생활 및 한-영 번역 병렬 말뭉치 데이터"를 사용.
+
+collecting-nmt-data 폴더에서 데이터를 받아올 때 사용한 코드를 활용할 수 있음.
+N2MT, GNMT 데이터를 받아올 때 사용한 코드를 확인할 수 있음.
+papago_response_tsv, google_response_tsv 파일을 최종 사용하였음.
