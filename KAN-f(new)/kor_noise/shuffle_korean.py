@@ -20,7 +20,6 @@ def shuffle_korean(word, seed=1):
 
     if len(word) < 4:
         return word
-    random.seed(seed)
     mid = list(word[1:-1])
     random.shuffle(mid)
 

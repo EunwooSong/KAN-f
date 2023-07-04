@@ -25,7 +25,7 @@ shiftkey_dic = {
     }
 }
 
-def shiftkey(word):
+def shiftkey(word, *args):
     """
     주어진 한글 문자를 쉬프트키로 변환합니다.
 

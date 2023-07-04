@@ -54,7 +54,7 @@ alter_dic_match = {
     '꺼':'77ㅓ',
 }
 
-def alter_word(word):
+def alter_word(word, *args):
     """
     주어진 한글 단어의 문자를 비슷한 문자로 변경하여 반환합니다.
 
@@ -83,7 +83,7 @@ def alter_word(word):
 def alter_char_i_m(initial, medial):
     tmp = h.hangul_composition(initial, medial, '')
     if tmp in alter_dic_i_m:
-        return h.hangul_decomposition(alter_dic_i_m[tmp])
+        return h.hangul_decomposition(alter_dic_i_m[tmp])[:2]
     return initial, medial
 
 def alter_char_m_f(medial, final):
