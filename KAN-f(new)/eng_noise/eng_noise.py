@@ -12,20 +12,18 @@ def remove_middle_consonant(word):
     >>> remove_middle_consonant('friendly')
     'frienly'
     """
-    modified_word = ''
-    consecutive_consonants = 0
-    for char in word:
-        if char.isalpha():
-            if char.lower() in 'bcdfghjklmnpqrstvwxyz':
-                consecutive_consonants += 1
-                if consecutive_consonants == 3:
-                    continue
-            modified_word += char
-            consecutive_consonants = 0
-        else:
-            modified_word += char
-            consecutive_consonants = 0
+
+    modified_word = word[0]
+
+    for i in range(1, len(word)-1):
+        if word[i-1] in 'bcdfghjklmnpqrstvwxyz' and word[i] in 'bcdfghjklmnpqrstvwxyz' and word[i+1] in 'bcdfghjklmnpqrstvwxyz':
+            continue
+        modified_word += word[i]
+
+    modified_word += word[-1]
+
     return modified_word
+
 
 def merge_words(word1, word2):
     """
@@ -36,7 +34,7 @@ def merge_words(word1, word2):
     word2 (str): 뒤 단어
 
     Returns:
-    str: 합쳐진 단어
+    list: 합쳐진 단어 리스트
 
     Examples:
     >>> merge_words('work', 'out')
@@ -164,16 +162,17 @@ def remove_duplicate_consonants(word):
     >>> remove_duplicate_consonants('summer')
     'sumer'
     """
-    modified_word = ''
-    i = 0
-    while i < len(word):
-        if word[i].isalpha():
-            if i < len(word) - 1 and word[i].lower() == word[i+1].lower() and word[i].lower() in 'bcdfghjklmnpqrstvwxyz':
-                i += 2
-                continue
-        modified_word += word[i]
-        i += 1
-    return modified_word
+
+    result = word[0]
+
+    for i in range(1, len(word)):
+        # 이전 문자와 현재 문자가 같은 자음인 경우, 스킵
+        if word[i] == word[i-1] and word[i] in 'bcdfghjklmnpqrstvwxyz':
+            continue
+        result += word[i]
+
+    return result
+
 
 def modify_gh_sound(word):
     """

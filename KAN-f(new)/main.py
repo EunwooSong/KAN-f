@@ -5,13 +5,10 @@ from kor_noise.add_final import add_final
 from kor_noise.alter_word import alter_word
 from kor_noise.shiftkey import shiftkey
 from kor_noise.shuffle_korean import shuffle_korean
+from eng_noise.eng_noise import *
 
-def eng_all(): 
-    
-    
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
-noise_list_eng = [shuffle_korean, eng_all]
 
 test_document = '이것은 KAN-f 노이즈 테스트를 위한 문장입니다. 이런이런... 떡 하나 주면 안 잡아 먹지!'
 
@@ -116,10 +113,20 @@ def convert_sentence_eng(sentence: dict, seed: int) -> str:
     문장 단위로 노이즈를 적용합니다. (영어 전용)
     """
     words = str.split(sentence['sentence'], ' ')
-    noise = random.choice(noise_list_eng)
     result = []
+    before_word = ''
+    # 모든 영어 노이즈 적용
     for word in words:
-        result.append(convert_word(word, noise, seed))
+        tmp_word = remove_middle_consonant(word);
+        tmp_word = modify_vowel_consonant_vowel(tmp_word);
+        tmp_word = modify_vowel_consonant_end_le(tmp_word);
+        tmp_word = modify_word(tmp_word);
+        tmp_word = remove_nt_sound(tmp_word);
+        tmp_word = remove_duplicate_consonants(tmp_word);
+        tmp_word = modify_gh_sound(tmp_word);
+        tmp_word = modify_wh_sound(tmp_word);
+
+        result.append(tmp_word);
     return ' '.join(result) + sentence['punc']
 
 
@@ -157,5 +164,5 @@ print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
 
-print(split_sentences("Hi, my name is EunwooSong."))
-
+print(convert_text_eng("friendly. video."))
+print(remove_middle_consonant("friendly"))
