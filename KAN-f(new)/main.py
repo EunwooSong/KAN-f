@@ -6,8 +6,12 @@ from kor_noise.alter_word import alter_word
 from kor_noise.shiftkey import shiftkey
 from kor_noise.shuffle_korean import shuffle_korean
 
+def eng_all(): 
+    
+    
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
+noise_list_eng = [shuffle_korean, eng_all]
 
 test_document = '이것은 KAN-f 노이즈 테스트를 위한 문장입니다. 이런이런... 떡 하나 주면 안 잡아 먹지!'
 
@@ -31,6 +35,16 @@ def convert_text(text:str, seed:int = 1) -> str:
         new_text += convert_sentence(sentence, seed)
     return new_text
 
+def convert_text_eng(text:str, seed: int = 1) -> str:
+    """
+    주어진 영어 텍스트에 랜덤한 노이즈를 적용합니다.
+    """
+
+    sentences = split_sentences(text)
+    new_text = ''
+    for sentence in sentences:
+        new_text += convert_sentence_eng(sentence, seed)
+    return new_text 
 
 def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n']) -> dict:
     """
@@ -88,7 +102,7 @@ def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n']) -> dict:
 
 def convert_sentence(sentence: dict, seed: int) -> str:
     """
-
+    문장 단위로 노이즈를 적용합니다. (한글 전용)
     """
     words = str.split(sentence['sentence'], ' ')
     noise = random.choice(noise_list)
@@ -96,6 +110,18 @@ def convert_sentence(sentence: dict, seed: int) -> str:
     for word in words:
         result.append(convert_word(word, noise, seed))
     return ' '.join(result) + sentence['punc']
+
+def convert_sentence_eng(sentence: dict, seed: int) -> str:
+    """
+    문장 단위로 노이즈를 적용합니다. (영어 전용)
+    """
+    words = str.split(sentence['sentence'], ' ')
+    noise = random.choice(noise_list_eng)
+    result = []
+    for word in words:
+        result.append(convert_word(word, noise, seed))
+    return ' '.join(result) + sentence['punc']
+
 
 def convert_word(word: str, noise, seed: int=1) -> str:
     conv_word = []
@@ -130,4 +156,6 @@ print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
+
+print(split_sentences("Hi, my name is EunwooSong."))
 
