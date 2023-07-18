@@ -9,7 +9,7 @@ from eng_noise.eng_noise import *
 
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
-noise_list_en = [shuffle_korean, word_eng_noise]
+noise_list_en = [word_eng_noise, shuffle_eng]
 test_document = '이것은 KAN-f 노이즈 테스트를 위한 문장입니다. 이런이런... 떡 하나 주면 안 잡아 먹지!'
 
 def convert_text(text:str, seed:int = 1) -> str:
@@ -43,7 +43,7 @@ def convert_text_eng(text:str, seed: int = 1) -> str:
         new_text += convert_sentence_eng(sentence, seed)
     return new_text 
 
-def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n']) -> dict:
+def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n', "'"]) -> dict:
     """
     주어진 텍스트를 문장으로 구분하여 반환합니다.
     문장과 해당 구두점을 dict 형식으로 반환합니다.
@@ -105,9 +105,8 @@ def convert_sentence_eng(sentence: dict, seed: int) -> str:
     words = str.split(sentence['sentence'], ' ')
     noise = random.choice(noise_list_en)
     result = []
-
     for word in words:
-        result.append(convert_word(word, noise, seed))
+        result.append(convert_word_en(word, noise, seed))
     return ' '.join(result) + sentence['punc']
 
 def convert_sentence(sentence: dict, seed: int) -> str:
@@ -170,7 +169,7 @@ def convert_word_en(word: str, noise, seed: int=1) -> str:
     
     return ''.join(result)
 
-random.seed(99)
+random.seed(100)
 print(convert_text('안녕하세요. 반갑습니다!'))
 print(convert_text('꺼. 꺼. 꺼. 꺼. 꺼. '))
 print(convert_text(test_document))
@@ -180,4 +179,5 @@ print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
 
-print(convert_text_eng("Don't you love 🤗 Transformers? We sure do."))
+print(convert_text_eng("Test. video, hello. python"))
+

@@ -1,3 +1,5 @@
+import random
+
 # 자음, 모음 리스트
 consonant = 'bcdfghjklmnpqrstvwxyz'
 vowel = 'aeiou'
@@ -231,7 +233,8 @@ def word_eng_noise(word: str, seed: int) -> str:
     """
     단어 단위로 노이즈를 적용합니다. (영어 전용)
     """
-
+    if len(word) < 2:
+        return word;
     # 모든 영어 노이즈 적용
     tmp_word = remove_middle_consonant(word);
     tmp_word = modify_vowel_consonant_vowel(tmp_word);
@@ -244,3 +247,27 @@ def word_eng_noise(word: str, seed: int) -> str:
     
     return tmp_word
 
+def shuffle_eng(word, seed=1):
+    """
+    주어진 한글 단어의 중간 글자를 랜덤하게 섞어 반환합니다.
+
+    Parameters:
+    word (str): 섞을 영어 단어
+    seed (int, optional): 난수 생성 시드값 (기본값: 1)
+
+    Returns:
+    str: 중간 글자가 랜덤하게 섞인 단어
+
+    Examples:
+    >>> shuffle_korean("Hello")
+    '안하세녕요'
+    >>> shuffle_korean("파이썬")
+    '파이썬'
+    """
+
+    if len(word) < 4:
+        return word
+    mid = list(word[1:-1])
+    random.shuffle(mid)
+
+    return word[0] + ''.join(mid) + word[-1]
