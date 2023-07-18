@@ -9,7 +9,7 @@ from eng_noise.eng_noise import *
 
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
-
+noise_list_en = [shuffle_korean, word_eng_noise]
 test_document = '이것은 KAN-f 노이즈 테스트를 위한 문장입니다. 이런이런... 떡 하나 주면 안 잡아 먹지!'
 
 def convert_text(text:str, seed:int = 1) -> str:
@@ -97,6 +97,19 @@ def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n']) -> dict:
 
     return result
 
+
+def convert_sentence_eng(sentence: dict, seed: int) -> str:
+    """
+    문장 단위로 노이즈를 적용합니다. (영어 전용)
+    """
+    words = str.split(sentence['sentence'], ' ')
+    noise = random.choice(noise_list_en)
+    result = []
+
+    for word in words:
+        result.append(convert_word(word, noise, seed))
+    return ' '.join(result) + sentence['punc']
+
 def convert_sentence(sentence: dict, seed: int) -> str:
     """
     문장 단위로 노이즈를 적용합니다. (한글 전용)
@@ -106,27 +119,6 @@ def convert_sentence(sentence: dict, seed: int) -> str:
     result = []
     for word in words:
         result.append(convert_word(word, noise, seed))
-    return ' '.join(result) + sentence['punc']
-
-def convert_sentence_eng(sentence: dict, seed: int) -> str:
-    """
-    문장 단위로 노이즈를 적용합니다. (영어 전용)
-    """
-    words = str.split(sentence['sentence'], ' ')
-    result = []
-    before_word = ''
-    # 모든 영어 노이즈 적용
-    for word in words:
-        tmp_word = remove_middle_consonant(word);
-        tmp_word = modify_vowel_consonant_vowel(tmp_word);
-        tmp_word = modify_vowel_consonant_end_le(tmp_word);
-        tmp_word = modify_word(tmp_word);
-        tmp_word = remove_nt_sound(tmp_word);
-        tmp_word = remove_duplicate_consonants(tmp_word);
-        tmp_word = modify_gh_sound(tmp_word);
-        tmp_word = modify_wh_sound(tmp_word);
-
-        result.append(tmp_word);
     return ' '.join(result) + sentence['punc']
 
 
@@ -154,6 +146,30 @@ def convert_word(word: str, noise, seed: int=1) -> str:
     
     return ''.join(result)
 
+def convert_word_en(word: str, noise, seed: int=1) -> str:
+    conv_word = []
+    index = 0
+    
+    for char in word:
+        if char.isalpha():
+            if index == len(conv_word):
+                conv_word.append(char)
+            else:
+                conv_word[index] += char
+        else:
+            index += 1
+            conv_word.append(char)
+            index += 1
+    
+    result = []
+    for seq in conv_word:
+        if seq.isalpha():
+            result.append(noise(seq, seed))
+        else:
+            result.append(seq)
+    
+    return ''.join(result)
+
 random.seed(99)
 print(convert_text('안녕하세요. 반갑습니다!'))
 print(convert_text('꺼. 꺼. 꺼. 꺼. 꺼. '))
@@ -164,5 +180,4 @@ print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
 
-print(convert_text_eng("friendly. video."))
-print(remove_middle_consonant("friendly"))
+print(convert_text_eng("Don't you love 🤗 Transformers? We sure do."))

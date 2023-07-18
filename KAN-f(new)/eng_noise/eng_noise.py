@@ -1,3 +1,7 @@
+# 자음, 모음 리스트
+consonant = 'bcdfghjklmnpqrstvwxyz'
+vowel = 'aeiou'
+
 def remove_middle_consonant(word):
     """
     주어진 단어에서 자음 3개가 연속되면 3개의 자음 중, 중간에 있는 자음이 탈락하는 함수입니다.
@@ -16,7 +20,7 @@ def remove_middle_consonant(word):
     modified_word = word[0]
 
     for i in range(1, len(word)-1):
-        if word[i-1] in 'bcdfghjklmnpqrstvwxyz' and word[i] in 'bcdfghjklmnpqrstvwxyz' and word[i+1] in 'bcdfghjklmnpqrstvwxyz':
+        if word[i-1] in consonant and word[i] in consonant and word[i+1] in consonant:
             continue
         modified_word += word[i]
 
@@ -25,26 +29,26 @@ def remove_middle_consonant(word):
     return modified_word
 
 
-def merge_words(word1, word2):
-    """
-    두 단어를 놓고 볼 때, 앞 단어는 자음으로 끝이 나며, 뒤의 단어는 모음으로 시작하는 경우 연음되는 단어로 합칩니다.
+# def merge_words(word1, word2):
+#     """
+#     두 단어를 놓고 볼 때, 앞 단어는 자음으로 끝이 나며, 뒤의 단어는 모음으로 시작하는 경우 연음되는 단어로 합칩니다.
 
-    Parameters:
-    word1 (str): 앞 단어
-    word2 (str): 뒤 단어
+#     Parameters:
+#     word1 (str): 앞 단어
+#     word2 (str): 뒤 단어
 
-    Returns:
-    list: 합쳐진 단어 리스트
+#     Returns:
+#     list: 합쳐진 단어 리스트
 
-    Examples:
-    >>> merge_words('work', 'out')
-    'wor kout'
-    """
-    if word1[-1].lower() in 'bcdfghjklmnpqrstvwxyz' and word2[0].lower() in 'aeiou':
-        merged_word = word1 + ' ' + word2
-    else:
-        merged_word = word1 + word2
-    return merged_word
+#     Examples:
+#     >>> merge_words('work', 'out')
+#     'wor kout'
+#     """
+#     if word1[-1].lower() in consonant and word2[0].lower() in vowel:
+#         merged_word = word1 + ' ' + word2
+#     else:
+#         merged_word = word1 + word2
+#     return merged_word
 
 
 def modify_vowel_consonant_vowel(word):
@@ -61,18 +65,19 @@ def modify_vowel_consonant_vowel(word):
     >>> modify_vowel_consonant_vowel('video')
     'vireo'
     """
-    modified_word = ''
-    for i in range(len(word)):
-        if word[i].isalpha():
-            if i < len(word) - 2 and word[i].lower() in 'aeiou':
-                if word[i+1].lower() in 'dt' and word[i+2].lower() in 'aeiou':
-                    continue
-            if i < len(word) - 1 and word[i].lower() in 'dt' and word[i+1].lower() in 'aeiou':
+    
+    modified_word = word[0]
+
+    for i in range(1, len(word)-1):
+        if word[i-1] in vowel and word[i] in consonant and word[i+1] in vowel:
+            if word[i] in 'dt':
                 modified_word += 'r'
-            else:
-                modified_word += word[i]
-        else:
-            modified_word += word[i]
+                continue
+        
+        modified_word += word[i]
+
+    modified_word += word[-1]
+
     return modified_word
 
 
@@ -93,7 +98,7 @@ def modify_vowel_consonant_end_le(word):
     modified_word = ''
     for i in range(len(word)):
         if word[i].isalpha():
-            if i < len(word) - 2 and word[i].lower() in 'aeiou':
+            if i < len(word) - 2 and word[i].lower() in vowel:
                 if word[i+1].lower() in 'dt' and word[i+2:].lower() == 'le':
                     modified_word += 'r'
                     continue
@@ -141,7 +146,7 @@ def remove_nt_sound(word):
     modified_word = ''
     for i in range(len(word)):
         if word[i].isalpha():
-            if i < len(word) - 1 and word[i].lower() in 'aeiou' and word[i+1].lower() == 'nt':
+            if i < len(word) - 1 and word[i].lower() in vowel and word[i+1].lower() == 'nt':
                 continue
             modified_word += word[i]
         else:
@@ -167,7 +172,7 @@ def remove_duplicate_consonants(word):
 
     for i in range(1, len(word)):
         # 이전 문자와 현재 문자가 같은 자음인 경우, 스킵
-        if word[i] == word[i-1] and word[i] in 'bcdfghjklmnpqrstvwxyz':
+        if word[i] == word[i-1] and word[i] in consonant:
             continue
         result += word[i]
 
@@ -190,16 +195,11 @@ def modify_gh_sound(word):
     """
     modified_word = ''
     i = 0
-    while i < len(word):
-        if word[i].isalpha():
-            if i == 0 and word[:2].lower() == 'gh':
-                i += 1
-                continue
-            elif i > 0 and word[i-1].isalpha() and word[i-1].lower() == 'g' and word[i].lower() == 'h':
-                i += 1
-                continue
-        modified_word += word[i]
-        i += 1
+
+    if word[:2] == 'gh':
+        modified_word = 'g' + word[2:]
+    else:
+        modified_word = word
     return modified_word
 
 def modify_wh_sound(word):
@@ -217,16 +217,30 @@ def modify_wh_sound(word):
     'were'
     """
     exceptions = ['who', 'whole', 'whom', 'whose']
-    if word.lower() not in exceptions:
-        modified_word = ''
-        i = 0
-        while i < len(word):
-            if word[i].isalpha():
-                if i > 0 and word[i-1].isalpha() and word[i-1].lower() == 'w' and word[i].lower() == 'h':
-                    i += 1
-                    continue
-            modified_word += word[i]
-            i += 1
+    if word.lower() in exceptions:
+        return word
+    
+    modified_word = ''
+    if word[:2] == 'wh':
+        modified_word = 'w' + word[2:]
     else:
         modified_word = word
     return modified_word
+
+def word_eng_noise(word: str, seed: int) -> str:
+    """
+    단어 단위로 노이즈를 적용합니다. (영어 전용)
+    """
+
+    # 모든 영어 노이즈 적용
+    tmp_word = remove_middle_consonant(word);
+    tmp_word = modify_vowel_consonant_vowel(tmp_word);
+    tmp_word = modify_vowel_consonant_end_le(tmp_word);
+    tmp_word = modify_word(tmp_word);
+    tmp_word = remove_nt_sound(tmp_word);
+    tmp_word = remove_duplicate_consonants(tmp_word);
+    tmp_word = modify_gh_sound(tmp_word);
+    tmp_word = modify_wh_sound(tmp_word);
+    
+    return tmp_word
+
