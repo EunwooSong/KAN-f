@@ -145,15 +145,8 @@ def remove_nt_sound(word):
     >>> remove_nt_sound('internet')
     'inernet'
     """
-    modified_word = ''
-    for i in range(len(word)):
-        if word[i].isalpha():
-            if i < len(word) - 1 and word[i].lower() in vowel and word[i+1].lower() == 'nt':
-                continue
-            modified_word += word[i]
-        else:
-            modified_word += word[i]
-    return modified_word
+    
+    pass
 
 def remove_duplicate_consonants(word):
     """
@@ -229,6 +222,27 @@ def modify_wh_sound(word):
         modified_word = word
     return modified_word
 
+def modify_kn_sound(word):
+    """
+    'wh'의 경우 'h'가 묵음이 되는 함수입니다. 단, 예외 단어를 제외하고 묵음으로 처리합니다.
+
+    Parameters:
+    word (str): 변환할 단어
+
+    Returns:
+    str: 발음 변화된 단어
+
+    Examples:
+    >>> modify_wh_sound('knife')
+    'nife'
+    """
+    modified_word = ''
+    if word[:2] == 'kn':
+        modified_word = word[2:]
+    else:
+        modified_word = word
+    return modified_word
+
 def word_eng_noise(word: str, seed: int) -> str:
     """
     단어 단위로 노이즈를 적용합니다. (영어 전용)
@@ -239,11 +253,12 @@ def word_eng_noise(word: str, seed: int) -> str:
     tmp_word = remove_middle_consonant(word);
     tmp_word = modify_vowel_consonant_vowel(tmp_word);
     tmp_word = modify_vowel_consonant_end_le(tmp_word);
-    tmp_word = modify_word(tmp_word);
+    #tmp_word = modify_word(tmp_word);
     tmp_word = remove_nt_sound(tmp_word);
     tmp_word = remove_duplicate_consonants(tmp_word);
     tmp_word = modify_gh_sound(tmp_word);
     tmp_word = modify_wh_sound(tmp_word);
+    tmp_word = modify_kn_sound(tmp_word);
     
     return tmp_word
 
@@ -271,3 +286,5 @@ def shuffle_eng(word, seed=1):
     random.shuffle(mid)
 
     return word[0] + ''.join(mid) + word[-1]
+
+__all__ = ['word_eng_noise', 'shuffle_eng']

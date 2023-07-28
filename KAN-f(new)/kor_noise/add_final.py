@@ -1,4 +1,4 @@
-import kor_noise.hangul as h
+from . import hangul as h
 import random
 
 def add_final(word, seed:int=1):

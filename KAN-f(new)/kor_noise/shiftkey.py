@@ -1,4 +1,4 @@
-import kor_noise.hangul as h
+from . import hangul as h
 
 shiftkey_dic = {
     "initial": {

@@ -1,11 +1,7 @@
 import re
 import random
-import kor_noise.hangul as hangul
-from kor_noise.add_final import add_final
-from kor_noise.alter_word import alter_word
-from kor_noise.shiftkey import shiftkey
-from kor_noise.shuffle_korean import shuffle_korean
-from eng_noise.eng_noise import *
+from kor_noise import *
+from eng_noise import *
 
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
@@ -35,7 +31,7 @@ def convert_text(text:str, seed:int = 1) -> str:
 def convert_text_eng(text:str, seed: int = 1) -> str:
     """
     주어진 영어 텍스트에 랜덤한 노이즈를 적용합니다.
-    """
+    """ 
 
     sentences = split_sentences(text)
     new_text = ''
@@ -170,6 +166,7 @@ def convert_word_en(word: str, noise, seed: int=1) -> str:
     return ''.join(result)
 
 random.seed(100)
+
 print(convert_text('안녕하세요. 반갑습니다!'))
 print(convert_text('꺼. 꺼. 꺼. 꺼. 꺼. '))
 print(convert_text(test_document))
@@ -179,5 +176,4 @@ print(convert_text(test_document))
 print(convert_text(test_document))
 print(convert_text(test_document))
 
-print(convert_text_eng("Test. video, hello. python"))
 

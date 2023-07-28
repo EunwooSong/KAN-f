@@ -1,4 +1,4 @@
-import kor_noise.hangul as h
+from . import hangul as h
 
 alter_dic_i_m = {
     '대':'머',
