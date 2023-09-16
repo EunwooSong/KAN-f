@@ -1,45 +1,37 @@
 import re
 import random
-from kor_noise import *
-from eng_noise import *
+from .kor_noise import *
 
 # 변환 노이즈 리스트
 noise_list = [add_final, alter_word, shiftkey, shuffle_korean]
-noise_list_en = [word_eng_noise, shuffle_eng]
 test_document = '이것은 KAN-f 노이즈 테스트를 위한 문장입니다. 이런이런... 떡 하나 주면 안 잡아 먹지!'
 
-def convert_text(text:str, seed:int = 1) -> str:
+def convert_text(text:str, p=1.0, n=1) -> str:
     """
     주어진 텍스트에 랜덤한 노이즈를 적용합니다.
 
     Parameters:
     text (str): 변환할 텍스트
+    p (float): 한 문장의 변형률(0~1.0)
 
     Returns:
     str: 변환된 텍스트
 
     Examples:
-    >>> split_sentences("안녕하세요. 반갑습니다!", ".!")
-    '안세녕하요. 반갑습니다!'
+    >>> split_sentences("안녕하세요. 반갑습니다!", p=1.0, n=2)
+    ['안세녕하요. 반갑습니다!', '안녕하세요. 반깝씁니따!']
     """
+    p = min(max(p, 0.0), 1.0)
     sentences = split_sentences(text);
-    new_text = ''
-    for sentence in sentences:
-        new_text += convert_sentence(sentence, seed)
+    new_text = []
+    for i in range(n):
+        new_text.append('')
+
+        for sentence in sentences:
+            new_text[i] += convert_sentence(sentence, p)
     return new_text
 
-def convert_text_eng(text:str, seed: int = 1) -> str:
-    """
-    주어진 영어 텍스트에 랜덤한 노이즈를 적용합니다.
-    """ 
-
-    sentences = split_sentences(text)
-    new_text = ''
-    for sentence in sentences:
-        new_text += convert_sentence_eng(sentence, seed)
-    return new_text 
-
-def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n', "'"]) -> dict:
+def split_sentences(text, punctuations=['.', '!', '?', ';','\n', "'"]) -> dict:
     """
     주어진 텍스트를 문장으로 구분하여 반환합니다.
     문장과 해당 구두점을 dict 형식으로 반환합니다.
@@ -93,31 +85,25 @@ def split_sentences(text, punctuations=['.', ',', '!', '?', ';','\n', "'"]) -> d
 
     return result
 
-
-def convert_sentence_eng(sentence: dict, seed: int) -> str:
-    """
-    문장 단위로 노이즈를 적용합니다. (영어 전용)
-    """
-    words = str.split(sentence['sentence'], ' ')
-    noise = random.choice(noise_list_en)
-    result = []
-    for word in words:
-        result.append(convert_word_en(word, noise, seed))
-    return ' '.join(result) + sentence['punc']
-
-def convert_sentence(sentence: dict, seed: int) -> str:
+def convert_sentence(sentence: dict, p:float) -> str:
     """
     문장 단위로 노이즈를 적용합니다. (한글 전용)
     """
     words = str.split(sentence['sentence'], ' ')
     noise = random.choice(noise_list)
     result = []
-    for word in words:
-        result.append(convert_word(word, noise, seed))
+    sample_cnt = int(len(words) * p)
+    noise_index = random.sample(range(len(words)), sample_cnt)
+
+    for i, word in enumerate(words):
+        if i in noise_index:
+            result.append(convert_word(word, noise))
+        else:
+            result.append(word)
     return ' '.join(result) + sentence['punc']
 
 
-def convert_word(word: str, noise, seed: int=1) -> str:
+def convert_word(word: str, noise) -> str:
     conv_word = []
     index = 0
     
@@ -135,45 +121,8 @@ def convert_word(word: str, noise, seed: int=1) -> str:
     result = []
     for seq in conv_word:
         if hangul.is_word_hangul(seq):
-            result.append(noise(seq, seed))
+            result.append(noise(seq))
         else:
             result.append(seq)
     
     return ''.join(result)
-
-def convert_word_en(word: str, noise, seed: int=1) -> str:
-    conv_word = []
-    index = 0
-    
-    for char in word:
-        if char.isalpha():
-            if index == len(conv_word):
-                conv_word.append(char)
-            else:
-                conv_word[index] += char
-        else:
-            index += 1
-            conv_word.append(char)
-            index += 1
-    
-    result = []
-    for seq in conv_word:
-        if seq.isalpha():
-            result.append(noise(seq, seed))
-        else:
-            result.append(seq)
-    
-    return ''.join(result)
-
-random.seed(100)
-
-print(convert_text('안녕하세요. 반갑습니다!'))
-print(convert_text('꺼. 꺼. 꺼. 꺼. 꺼. '))
-print(convert_text(test_document))
-print(convert_text(test_document))
-print(convert_text(test_document))
-print(convert_text(test_document))
-print(convert_text(test_document))
-print(convert_text(test_document))
-
-

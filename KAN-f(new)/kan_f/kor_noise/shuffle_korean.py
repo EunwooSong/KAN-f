@@ -1,6 +1,6 @@
 import random
 
-def shuffle_korean(word, seed=1):
+def shuffle_korean(word):
     """
     주어진 한글 단어의 중간 글자를 랜덤하게 섞어 반환합니다.
 
