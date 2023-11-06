@@ -114,9 +114,7 @@ def convert_word(word: str, noise) -> str:
             else:
                 conv_word[index] += char
         else:
-            index += 1
             conv_word.append(char)
-            index += 1
     
     result = []
     for seq in conv_word:
