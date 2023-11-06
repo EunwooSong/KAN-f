@@ -29,11 +29,15 @@ new_test_df = {'ko': [], 'en': []}
 
 # 데이터 변환하기
 for index, row in train_df.iterrows():
+    new_train_df['ko'].append(row['ko'])
+    new_train_df['en'].append(row['en'])
     for i in range(n):
         new_train_df['ko'].append(convert_text(row['ko'], p, 1)[0])
         new_train_df['en'].append(row['en'])
 
 for index, row in test_df.iterrows():
+    new_test_df['ko'].append(row['ko'])
+    new_test_df['en'].append(row['en'])
     for i in range(n):
         new_test_df['ko'].append(convert_text(row['ko'], p, 1)[0])
         new_test_df['en'].append(row['en'])

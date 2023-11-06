@@ -1,6 +1,6 @@
 python make.py [노이즈 세기(실수)] [생성 문장(정수)]
 예시: python make.py 0.5 1
-
+단, 생성 문장이 0인 경우, origin.tsv만 생성됩니다.
 
 train 폴더와 test 폴더에 아래 이름 양식으로 파일이 생성됩니다.
 train_p_[노이즈 세기]_n_[생성 문장].tsv
